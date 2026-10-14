@@ -1,0 +1,304 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101827">
+  <title>NEXORA — Your Growth Journey</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6fb;
+      color: #182235;
+      line-height: 1.5;
+    }
+    header {
+      background: #101827;
+      color: white;
+      padding: 20px;
+    }
+    .topbar {
+      max-width: 1100px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand { font-size: 25px; font-weight: 800; letter-spacing: 2px; }
+    .brand span { color: #8b9cff; }
+    .tagline { color: #c5cde0; font-size: 13px; }
+    main { max-width: 1100px; margin: auto; padding: 24px 18px 45px; }
+    .welcome {
+      background: linear-gradient(120deg, #192944, #5144a5);
+      color: white;
+      padding: 28px;
+      border-radius: 20px;
+      margin-bottom: 22px;
+    }
+    .welcome p { color: #e0e5ff; margin-top: 8px; }
+    .eyebrow { text-transform: uppercase; font-size: 11px; letter-spacing: 2px; font-weight: bold; }
+    h1 { font-size: clamp(25px, 5vw, 38px); margin-top: 9px; }
+    h2 { font-size: 19px; margin-bottom: 14px; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 13px;
+      margin-bottom: 22px;
+    }
+    .stat, .panel {
+      background: white;
+      border: 1px solid #e7eaf2;
+      border-radius: 15px;
+      padding: 19px;
+    }
+    .stat strong { display: block; font-size: 27px; color: #5144a5; }
+    .stat span { font-size: 12px; color: #68738a; }
+    .columns {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+      align-items: start;
+    }
+    .panel { margin-bottom: 18px; }
+    .muted { color: #758096; font-size: 13px; }
+    .task {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf0f6;
+    }
+    .task:last-child { border-bottom: 0; }
+    .task input { width: 18px; height: 18px; accent-color: #5144a5; }
+    .task label { flex: 1; overflow-wrap: anywhere; }
+    .task.done label { text-decoration: line-through; color: #8b94a5; }
+    button {
+      border: 0;
+      cursor: pointer;
+      border-radius: 9px;
+      padding: 11px 14px;
+      font-weight: bold;
+      background: #5144a5;
+      color: white;
+    }
+    button:hover { opacity: 0.9; }
+    .add-row { display: flex; gap: 8px; margin-top: 13px; }
+    input[type="text"] {
+      min-width: 0;
+      flex: 1;
+      padding: 11px;
+      border: 1px solid #dce1ed;
+      border-radius: 9px;
+      font: inherit;
+    }
+    .habit {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf0f6;
+    }
+    .habit:last-child { border-bottom: 0; }
+    .habit button { padding: 8px 10px; font-size: 12px; }
+    .goal { margin-top: 15px; }
+    .goal-line { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; }
+    .track { height: 8px; background: #eceef6; border-radius: 9px; margin-top: 8px; overflow: hidden; }
+    .fill { height: 100%; width: 0; background: #7163df; transition: width .2s; }
+    .tip { background: #f0efff; border-radius: 11px; padding: 14px; color: #39316f; font-size: 14px; }
+    footer { text-align: center; padding: 20px; color: #7a8497; font-size: 12px; }
+    @media (max-width: 650px) {
+      .columns { grid-template-columns: 1fr; }
+      .stats { gap: 8px; }
+      .stat { padding: 13px 10px; }
+      .stat strong { font-size: 23px; }
+      .stat span { font-size: 11px; }
+      .welcome { padding: 23px 19px; }
+      .add-row button { padding: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div>
+        <div class="brand">NEX<span>ORA</span></div>
+        <div class="tagline">Your growth. Your journey.</div>
+      </div>
+      <div class="tagline">PERSONAL GROWTH PLATFORM</div>
+    </div>
+  </header>
+
+  <main>
+    <section class="welcome">
+      <div class="eyebrow">A new day, a new opportunity</div>
+      <h1>Build the life you want.</h1>
+      <p>Small actions today. Meaningful progress tomorrow.</p>
+      <p id="today" aria-live="polite"></p>
+    </section>
+
+    <section class="stats" aria-label="Your progress">
+      <div class="stat"><strong id="taskCount">0/0</strong><span>Tasks completed</span></div>
+      <div class="stat"><strong id="habitCount">0/3</strong><span>Habits completed today</span></div>
+      <div class="stat"><strong id="progress">0%</strong><span>Daily progress</span></div>
+    </section>
+
+    <div class="columns">
+      <div>
+        <section class="panel">
+          <h2>Today's action plan</h2>
+          <p class="muted">Choose a small action and get it done.</p>
+          <div id="tasks"></div>
+          <form class="add-row" id="taskForm">
+            <input id="taskInput" type="text" maxlength="100" placeholder="Add a new task..." aria-label="New task" required>
+            <button type="submit">Add task</button>
+          </form>
+        </section>
+
+        <section class="panel">
+          <h2>My growth goals</h2>
+          <p class="muted">Your goals give your daily actions direction.</p>
+          <div class="goal">
+            <div class="goal-line"><span>Learning and skills</span><strong>In progress</strong></div>
+            <div class="track"><div class="fill" style="width:30%"></div></div>
+          </div>
+          <div class="goal">
+            <div class="goal-line"><span>Health and wellbeing</span><strong>In progress</strong></div>
+            <div class="track"><div class="fill" style="width:20%"></div></div>
+          </div>
+          <div class="goal">
+            <div class="goal-line"><span>Personal discipline</span><strong>In progress</strong></div>
+            <div class="track"><div class="fill" style="width:40%"></div></div>
+          </div>
+        </section>
+      </div>
+
+      <div>
+        <section class="panel">
+          <h2>Daily habits</h2>
+          <p class="muted">Consistency matters more than perfection.</p>
+          <div id="habits"></div>
+        </section>
+
+        <section class="panel">
+          <h2>Your daily reminder</h2>
+          <div class="tip">
+            You don't need to change your entire life today. Choose one useful action, complete it, and build from there.
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer>NEXORA · Your growth journey starts here.</footer>
+
+  <script>
+    const initialTasks = [
+      { id: 1, text: "Plan my priorities for today", done: false },
+      { id: 2, text: "Spend 20 minutes learning something useful", done: false },
+      { id: 3, text: "Review my goals before the day ends", done: false }
+    ];
+
+    const initialHabits = [
+      { id: 1, text: "Read or learn for 20 minutes", done: false },
+      { id: 2, text: "Move my body", done: false },
+      { id: 3, text: "Reflect on my day", done: false }
+    ];
+
+    let tasks = initialTasks;
+    let habits = initialHabits;
+
+    const tasksElement = document.getElementById("tasks");
+    const habitsElement = document.getElementById("habits");
+
+    document.getElementById("today").textContent =
+      new Date().toLocaleDateString(undefined, {
+        weekday: "long", year: "numeric", month: "long", day: "numeric"
+      });
+
+    function renderTasks() {
+      tasksElement.innerHTML = "";
+
+      tasks.forEach(task => {
+        const row = document.createElement("div");
+        row.className = "task" + (task.done ? " done" : "");
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = task.done;
+        checkbox.id = "task-" + task.id;
+        checkbox.addEventListener("change", () => {
+          task.done = checkbox.checked;
+          render();
+        });
+
+        const label = document.createElement("label");
+        label.htmlFor = checkbox.id;
+        label.textContent = task.text;
+
+        row.append(checkbox, label);
+        tasksElement.appendChild(row);
+      });
+    }
+
+    function renderHabits() {
+      habitsElement.innerHTML = "";
+
+      habits.forEach(habit => {
+        const row = document.createElement("div");
+        row.className = "habit";
+
+        const name = document.createElement("span");
+        name.textContent = habit.text;
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = habit.done ? "Completed ✓" : "Mark done";
+        button.setAttribute("aria-pressed", String(habit.done));
+        button.style.background = habit.done ? "#16805d" : "#5144a5";
+        button.addEventListener("click", () => {
+          habit.done = !habit.done;
+          render();
+        });
+
+        row.append(name, button);
+        habitsElement.appendChild(row);
+      });
+    }
+
+    function render() {
+      renderTasks();
+      renderHabits();
+
+      const completedTasks = tasks.filter(task => task.done).length;
+      const completedHabits = habits.filter(habit => habit.done).length;
+      const total = tasks.length + habits.length;
+      const completed = completedTasks + completedHabits;
+      const percentage = total ? Math.round(completed / total * 100) : 0;
+
+      document.getElementById("taskCount").textContent =
+        completedTasks + "/" + tasks.length;
+      document.getElementById("habitCount").textContent =
+        completedHabits + "/" + habits.length;
+      document.getElementById("progress").textContent = percentage + "%";
+    }
+
+    document.getElementById("taskForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const input = document.getElementById("taskInput");
+      const text = input.value.trim();
+
+      if (!text) return;
+
+      tasks.push({ id: Date.now(), text, done: false });
+      input.value = "";
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>
